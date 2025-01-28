@@ -301,6 +301,63 @@ Tu peux voir que la syntaxe est différente pour `name` et pour `age`. Les chaî
 
 Pour toutes les autres `valeurs` (`nombre`, `objet`, `variable`...), tu dois utiliser des `{}` pour entourer ta `valeur` `JavaScript`. C'est le cas pour `age={25}`.
 
+### Quelles valeurs je peux faire passer en props ?
+
+Dans `react`, tu peux passer n'importe quel type de `valeur` en `props` à tes `composants`. Des `types primitifs` (`string`, `number`, `boolean`...) et `non primitifs` (`function`, `object`) :
+```bash
+import Cart from "./Cart"
+function App() {
+  const product = {
+    name: "apples",
+    price: 1.5,
+    quantity: 2
+  }
+  const calculate = (product) => product.price * product.quantity
+  return <Cart product={product} calculate={calculate} />;
+}
+export default App;
+```
+Attention cependant à la façon dont tu passes tes `props`. Seules les chaînes de caractères statiques comme `"Hello wilder !"` peuvent être passées entre guillemets. `Expressions`, `variables`, `fonctions` et même les `template strings` doivent être passées entre accolades.
+
+### Rendre les choses plus lisibles
+
+Une dernière chose : tu peux déstructurer `l'objet` `props` dans le `composant` qui l'utilise.
+
+Reprenons notre `composant Cart` qui actuellement ressemble à ceci :
+```bash
+function Cart(props) {
+  return `You bought ${props.product.quantity} ${props.product.name} for ${props.calculate(props.product)}€`;
+}
+export default Cart;
+```
+Tu peux déstructurer l'objet `props` afin d'améliorer la lisibilité :
+```bash
+function Cart(props) {
+  const { product, calculate } = props;
+  return `You bought ${product.quantity} ${product.name} for ${calculate(product)}€`;
+}
+export default Cart;
+```
+Le `JSX` est plus lisible de cette manière. Pour aller plus loin, tu peux déstructurer tes `props` directement dans les paramètres de ta `fonction composant` :
+```bash
+function Cart({ product, calculate }) {
+  return `You bought ${product.quantity} ${product.name} for ${calculate(product)}€`;
+}
+export default Cart;
+```
+C'est cette syntaxe nous utiliserons par défaut.
+
+### Récapitulatif
+
+Les `props` sont toujours passées d'un `composant parent` vers un `composant enfant`.
+
+Le mot-clé `props` est une `convetion` pour l'objet en `paramètre` d'une `fonction composant`.
+
+Les `props` peuvent être de n'importe quel `type`.
+
+Les `props` sont toujours en lecture seul.
+
+
 
 
 
