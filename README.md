@@ -197,6 +197,47 @@ Attention, néanmoins, tu ne peux pas exécuter n'importe quel code `JavaScript`
 
 Ce qui est important de retenir ici c'est que lorsque que tu écris du code `JavaScript` entre accolades `{}` dans du `JSX`, celui-ci va être interprété.
 
+### Expressions VS Instructions
+
+En `JavaScript`, tu dois bien distinguer les expressions qui retournent une valeur des instructions qui peuvent servir à tester des valeurs comme un `if` ou bien à répéter d'autres instructions comme un `for`.
+
+Maintenant que nous distinguons bien la différence entre `expressions` et `instructions`, et bien, tu dois retenir que dans le `JSX`, tu peux uniquement utiliser des `expressions` !
+
+### Démonstration
+
+Prenons un exemple. Si en fonction d'un mot particulier nous souhaitons afficher une icône correspondante dans du `JSX` nous procéderions comme suit :
+```bash
+function WeatherIcon() {
+  const weather = "sunny";
+  return <p>{weather === "sunny" ? "☀️" : "☁️"}</p>
+}
+export default WeatherIcon;
+```
+Ici, nous avons mis une condition grâce à `l'opérateur ternaire` qui est une `expression JavaScript`.
+Change la valeur de la `variable weather` ("rainy" par exemple) et tu verras apparaitre le nuage à la place du soleil.
+
+Comment faire lorsque nos conditions sont plus complexes ou lorsque nous devons utiliser plusieurs `instructions` ?
+
+Tu peux créer une fonction qui renvoie une valeur !
+```bash
+function WeatherIcon() {
+  const weather = "sunny";
+  const printIcon = (name) => {
+    const weatherMap = {
+      sunny: "☀️",
+      cloudy: "☁️",
+      rainy: "🌧️",
+      stormy: "🌩️"
+    }  
+    return weatherMap[name]
+  }
+  return <p>{printIcon(weather)}</p>
+}
+export default WeatherIcon;
+```
+Ici, nous avons utilisé une fonction comme `expression` pour gérer la logique en dehors du `JSX`. L'appel de fonction `printIcon`(weather) est une `expression` et retourne une `valeur primitive` : elle peut être utilisée à l'intérieur du `JSX`.
+
+Tu peux t'amuser à changer la `valeur` de la `variable` weather pour voir les icônes changer.
 
 
 
