@@ -240,6 +240,70 @@ Ici, nous avons utilisé une fonction comme `expression` pour gérer la logique 
 Tu peux t'amuser à changer la `valeur` de la `variable` weather pour voir les icônes changer.
 
 
+## Passer des `props`
+
+### Passer des données d'un `composant` à un autre grâce aux `props`
+
+Si tu te souviens bien, nous avons vu la hiérarchie des `composants` dans `React`. Les `props` dans `React` permettent de faire passer des informations d'un `composant` à un autre. Mais attention : les `props` peuvent être transmises uniquement d'un `composant parent` vers un `composant enfant`.
+
+Tu peux voir que `App` peut transmettre des `props` à chacun de ses `composants Card`. Chaque `composant Card` peut lui-même transmettre des `props` à son `composant Button`.
+
+### Comment procéder ?
+
+Garde en tête que les `composants React` sont des `fonctions`. Tu peux imaginer le code suivant en `JavaScript "vanilla"` :
+```bash
+import App from "./App";
+App();
+```
+Dans `App.js`, nous avons créé une `fonction App` et `importé` une `fonction SayHello` depuis un autre fichier (`SayHello.js`). La fonction `SayHello` attend en paramètre une chaine de caractère que nous lui passons lors de l'appel dans `App` :
+`SayHello("Wilder")`
+
+En `React`, la même chose donnerait :
+```bash
+import SayHello from "./SayHello";
+function App() {
+  return SayHello("Wilder");
+}
+export default App;
+```
+Une grosse différence : c'est `React` qui gère la manipulation du `DOM` à notre place. Cette partie du code dans le premier exemple a disparu :
+`document.body.innerText =`
+
+Dans `React`, tu dois passer les `props` au travers d'un `objet` et non pas directement la valeur comme dans `SayHello("Wilder")`. Si par le plus grand des hasards tu appelles cet `objet props` dans le composant `SayHello`, cela donne :
+```bash
+import SayHello from "./SayHello";
+function App() {
+  return SayHello({name: "Wilder"});
+}
+export default App;
+```
+Dans `React`, le nom `props` est une convention pour le premier paramètre d'une `fonction composant`. Ici, c'est le paramètre qui représente `l'objet` avec toutes les `valeurs` envoyées du `composant` parent `App` au `composant` enfant `SayHello`.
+
+Dernier point : dans `React`, tu manipules tes `composants` avec la syntaxe `JSX`. Plutôt que la syntaxe `JS SayHello({name: "Wilder"})`, tu peux appeler tes `composants` avec la syntaxe `JSX` et passer tes `props` comme tu utiliserais des attributs en `HTML` :
+```bash
+import SayHello from "./SayHello";
+function App() {
+  return <SayHello name="Wilder" />;
+}
+export default App;
+```
+Dans notre `composant App`, nous avons appelé notre `composant SayHello` en lui passant en props un couple `clé/valeur` : la `clé` est name et la `valeur` est `"Wilder"`.
+
+En fait, `props` est un `objet` qui contient toutes les `clés/valeurs` passées au `composant`. Tu peux le voir dans cet exemple :
+```bash
+import SayHello from "./SayHello";
+function App() {
+  return <SayHello name="Alice" age={25} />;
+}
+export default App;
+```
+Tu peux voir que la syntaxe est différente pour `name` et pour `age`. Les chaînes de caractères peuvent être passées dans les `props` avec des `""` comme les attributs `HTML`. C'est le cas pour `name="Alice"`.
+
+Pour toutes les autres `valeurs` (`nombre`, `objet`, `variable`...), tu dois utiliser des `{}` pour entourer ta `valeur` `JavaScript`. C'est le cas pour `age={25}`.
+
+
+
+
 
 
 
