@@ -1,4 +1,4 @@
-# 🟣 Projet d’apprentissage des bases de React avec TypeScript 🟣
+# 🟣 Projet d’apprentissage React avec TypeScript 🟣
 
 ## Ce projet a été conçu pour apprendre et pratiquer les concepts essentiels de React, le framework incontournable pour le développement d’interfaces utilisateur dynamiques et modernes. 🚀✨
 
