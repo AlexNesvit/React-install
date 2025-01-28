@@ -168,6 +168,36 @@ Pour pouvoir utiliser tes `composants`, tu utilises les `imports` et les `export
 Dans du `JSX`, tu peux appeler un `composant` par son nom comme si c'était une balise `HTML` auto-fermante.
 
 
+## Afficher des données dans un composant
+
+### Petit retour sur le JSX
+
+Comme nous l'avons dit dans la quête précédente, `JSX` te permet de mettre du balisage dans du `JavaScript`. Dans ce balisage, les accolades te permettent de "revenir" en `JavaScript` afin d'intégrer une `variable` de ton code et l'afficher :
+```bash
+function SayHello() {
+  const message = "Hello !";
+
+  return <p>{message}</p>
+}
+export default SayHello;
+```
+Attention, le `JSX` supporte uniquement l'affichage des `types primitifs` !
+
+Tu peux également y exécuter du `JavaScript` :
+```bash
+function SayHello() {
+  const message = "Hello !"
+  return <p>{message.toUpperCase()}</p>
+}
+export default SayHello;
+```
+Comme tu peux le constater, nous avons mis la chaîne de caractères message en majuscules. Cela fonctionne car la méthode `toUpperCase` retourne une valeur de type `String` qui est un type `primitif`.
+
+Attention, néanmoins, tu ne peux pas exécuter n'importe quel code `JavaScript` dans du `JSX`.
+
+Ce qui est important de retenir ici c'est que lorsque que tu écris du code `JavaScript` entre accolades `{}` dans du `JSX`, celui-ci va être interprété.
+
+
 
 
 
