@@ -454,6 +454,60 @@ Cette fois, `TypeScript` vérifie la cohérence de ton code et te prévient en c
 
 
 
+Comme tu as vu dans l'exemple précédent, nous avons forcé le passage des `props`, qui sont donc désormais obligatoires. Mais comment faire si des propriétées sont optionnelles ?
+
+Dans `TypeScript`, tu peux ajouter le signe `?` sur ces propriétés pour préciser qu'elle sont optionnelles :
+```bash
+interface SayHelloProps {
+  name: string;
+  age?: number;
+
+function SayHello({ name, age }: SayHelloProps) {
+  return (
+    <p>
+      Hello, my name is {name}
+      {age != null && `, and I'm ${age}.`}
+    </p>
+  );
+}
+function App() {
+  return (
+    <>
+      <SayHello name="Wilder" age={22} />
+      <SayHello name="Toto" /> {/* Pas d'âge fourni ici */}
+    </>
+  );
+}
+export default App;
+```
+
+### Récapitulatif
+
+Tu as vu comment typer les props avec `TypeScript` avec une interface. Tu peux utiliser des types primitifs pour tes `props` comme `number`, `string` `boolean`... Mais également des `tableaux`, des `objets` et bien plus encore :
+```bash
+interface SayHelloProps {
+  name: string;
+  address: {
+    city: string;
+  };
+}
+
+function SayHello({ name, address }: SayHelloProps) {
+  return (
+    <p>
+      Hello, my name is {name}, and I live in {address.city}.
+    </p>
+  );
+}
+function App() {
+  return <SayHello name="Wildo" address={{ city: "Reims" }} />;
+} 
+export default App;
+```
+
+
+
+
 
 
 
