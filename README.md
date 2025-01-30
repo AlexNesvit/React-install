@@ -646,6 +646,262 @@ export default App
 Rappel : Pour modifier la valeur d'un `state`, tu dois toujours utiliser le setter de ce `state`.
 
 
+## `React` Basics 07 - Pokédex - Répéter un bloc d'affichage avec `map`
+
+### Petit retour sur les expressions
+
+Tu as appris que pour répéter des instructions, tu dois utiliser des boucles (`for/while`).
+
+Malheureusement, dans le return d'une fonction composant, tu peux uniquement te servir d'expressions. Quelque soit la façon de l'écrire, une construction `return` for ne fonctionne pas en `JS/TS` :
+```bash
+function App() {
+  const cart = ["apple", "banana", "grape", "watermelon"];
+  return (
+    <div>
+      <h1>shopping list</h1>
+      <ul>
+        {for (const article of cart) {
+          <li>{article}</li>
+        }}
+      </ul>
+    </div>
+  );
+}
+export default App;
+```
+Heureusement, le `JavaScript` nous fournit de nombreuses `méthodes` pour interagir avec les tableaux (listes de données). Ces `méthodes` sont des expressions puisqu'elles retournent une valeur. Une méthode des tableaux qui va beaucoup nous intéresser dans React est la `méthode map`.
+
+### Comment ça marche ?
+```bash
+function App() {
+  const cart = ["apple", "banana", "grape", "watermelon"];
+  return (
+    <section>
+      <h1>shopping list</h1>
+      <ul>
+        {cart.map((article) => (
+          <li>{article}</li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+export default App;
+```
+Dans cet exemple, nous avons utilisé la méthode `map()` sur notre tableau d'articles. Pour chaque article, l'expression construit un `<li>` avec la valeur contenue à cet index `🪄`.
+
+Tu peux faire la même chose avec des structures de données plus complexes (tout en respectant la règle selon laquelle, entre des accolades `{}`, le `JSX` ne peut afficher que des types primitifs) :
+```bash
+function App() {
+  const cart = [
+    { name: "apple", emoji: "🍏" },
+    { name: "banana", emoji: "🍌" },
+    { name: "grape", emoji: "🍇" },
+    { name: "watermelon", emoji: "🍉" },
+  ];
+  return (
+    <section>
+      <h1>shopping list</h1>
+      <ul>
+        {cart.map((product) => (
+          <li>
+```
+Tu peux aussi le faire avec des composants react en passant les valeurs en props :
+```bash
+interface ArticleProps {
+  name: string;
+  emoji: string;
+}
+function Article({ name, emoji }: ArticleProps) {
+  return (
+    <li>
+      {emoji} {name}
+    </li>
+  );
+}
+function App() {
+  const cart: ArticleType[] = [
+    { name: "apple", emoji: "🍏" },
+    { name: "banana", emoji: "🍌" },
+    { name: "grape", emoji: "🍇" },
+    { name: "watermelon", emoji: "🍉" },
+  ];
+  return (
+    <section>
+      <h1>shopping list</h1>
+      <ul>
+        {cart.map((article) => (
+          <Article name={article.name} emoji={article.emoji} />
+        ))}
+      </ul>
+    </section>
+  );
+}
+export default App;
+```
+Dans la littérature, cela s'appelle le `component mapping` !
+
+Regarde le dernier exemple : dans la console, un message y apparaît 🤨 (il apparaît en réalité sur tous les exemples précédents).
+
+Le message t'indique que dans les éléments produits par notre `map`, tu dois renseigner une prop `key`. Aussi, le message te renvoie vers une page de la documentation.
+
+
+### Comprendre les clés
+
+Afin que `React` puisse identifier quel élément d'une liste de données (un tableau) est contenu dans le `JSX`, il a besoin d'un identifiant unique. Cet identifiant prend la forme d'une `props` que tu dois passer à chaque noeud `JSX` produit par un `map`. Cette `props` se nomme `key` (c'est un mot-clé réservé).
+
+Concrètement ça donne :
+```bash
+function App() {
+  const cart = [
+    { name: "apple", emoji: "🍏" },
+    { name: "banana", emoji: "🍌" },
+    { name: "grape", emoji: "🍇" },
+    { name: "watermelon", emoji: "🍉" },
+  ];
+  return (
+    <section>
+      <h1>shopping list</h1>
+      <ul>
+        {cart.map((article, index) => (
+          <li key={index}>
+            {article.emoji} {article.name}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+export default App;
+```
+Ici nous avons pris l'index du tableau auquel se trouve l'élément que l'on injecte dans le `JSX`, et comme tu peux le constater, l'erreur n’apparaît plus !
+
+Cependant...
+
+!!! Utiliser l'index d'un tableau est acceptable uniquement si le tableau n'est pas amené à être muté.
+
+Pour faire simple, la plupart du temps c'est une mauvaise pratique.
+
+Considère le code suivant :
+```bash
+import { useState } from "react";
+const initialCart = [
+  { name: "apple", emoji: "🍏" },
+  { name: "banana", emoji: "🍌" },
+  { name: "grape", emoji: "🍇" },
+  { name: "watermelon", emoji: "🍉" },
+];
+function App() {
+  const [cart, setCart] = useState(initialCart);
+  const removeArticle = (article) => {
+    setCart(cart.filter((item) => item !== article));
+  };
+  return (
+    <section>
+      <h1>shopping list</h1>
+      <ul>
+        {cart.map((article, index) => (
+          <li key={index}>
+            {article.emoji} {article.name}
+            <input type="text" defaultValue={article.name} />
+            <button onClick={() => removeArticle(article)}>remove</button>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+export default App;
+```
+Dans cet exemple, j'ai implémenté une fonction qui permet de supprimer l'élément avec un bouton à cliquer.
+
+Supprime un élément de la liste et tu va constater un bug évident : le texte présent dans l'input ne correspond plus à l'item du tableau !
+
+Pourquoi ? Parce que React optimise le rendu en ne recalculant l'affichage que des éléments dont la key a changé. Comme tu décales tous les indexes du tableau au moment de la suppression, c'est l'élément présent à l'ancien index qui s'affiche.
+
+Ce que tu dois retenir :
+
+    Utilise un identifiant unique et invariant à chaque élément que tu veux mapper.
+
+Voici un exemple qui fonctionne :
+```bash
+import { useState } from "react";
+const initialCart = [
+  { name: "apple", emoji: "🍏" },
+  { name: "banana", emoji: "🍌" },
+  { name: "grape", emoji: "🍇" },
+  { name: "watermelon", emoji: "🍉" },
+];
+function App() {
+  const [cart, setCart] = useState(initialCart);
+  const removeArticle = (article) => {
+    setCart(cart.filter((item) => item !== article));
+  };
+  return (
+    <section>
+      <h1>shopping list</h1>
+      <ul>
+        {cart.map((article) => (
+          <li key={article.name}>
+            {article.emoji} {article.name}
+            <input type="text" defaultValue={article.name} />
+            <button onClick={() => removeArticle(article)}>remove</button>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+export default App;
+```
+Ici, nous avons utilisé le nom de l'article comme clé. Il est unique, donc le rendu est cohérent.
+
+Dans ce cas, nous avons eu de la chance car tous les noms des articles sont uniques. Avec un jeu de données réelles, tu dois t'assurer que chaque donnée possède bien un identifiant unique.
+
+### Et c'est tout ?
+
+Bien-sûr que non ! Qui dit tableau, dit méthode de tableau. Voici un petit exemple :
+```bash
+function Article({ name, emoji }) {
+  return (
+    <li>
+      {emoji} {name}
+    </li>
+  );
+}
+function App() {
+  const cart = [
+    { name: "apple", emoji: "🍏" },
+    { name: "banana", emoji: "🍌" },
+    { name: "grape", emoji: "🍇" },
+    { name: "watermelon", emoji: "🍉" },
+  ];
+  return (
+    <section>
+      <h1>shopping list</h1>
+      <ul>
+        {cart
+          .filter((article) => article.name.includes("e"))
+          .map((article) => (
+            <Article
+              key={article.name}
+              name={article.name}
+              emoji={article.emoji}
+            />
+          ))}
+      </ul>
+    </section>
+  );
+}
+export default App;
+```
+Dans cet exemple, nous avons filtré le tableau du state afin de ne récupérer que les fruits contenants la lettre "e", avant de faire le `map` servant à l'affichage.
+
+De nombreuses `méthodes` de tableau existent : tu peux en essayer d'autres en `fonction` de tes besoins.
+
+
+
+
 
 
 
