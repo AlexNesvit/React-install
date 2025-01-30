@@ -621,6 +621,29 @@ Dans cet exemple, lorsque tu cliques sur le bouton, le compteur est incrémenté
 
 C'est là tout l'intérêt du `state` : lorsque tu modifies un `state` avec son setter, alors ton `composant` est rendu à nouveau : tout le code qui se trouve à l'intérieur est re-exécuté et l'affichage est mis à jour avec le nouveau `JSX` retourné.
 
+### Primitive / Non Primitive
+
+Nous avons vu précédemment comment mettre à jour un `state` avec des valeurs `primitives` (des nombres). Qu'en-est-il des valeurs `non primitives` comme les `objets` ?
+
+Eh bien souviens-toi qu'une variable ne contient pas réellement l'objet, mais plutôt une référence vers celui-ci. Nous devons donc produire un nouvel objet pour rendre la modification "visible", comme suit :
+```bash
+import { useState } from "react";
+function App() {
+  const [user, setUser] = useState({name: "Bob"});
+  const handleClick = () => {
+    // user.name = "Alice"; => NO !!!
+    setUser({ name: "Alice" })
+  }
+  return (
+    <div>
+      <p>{user.name}</p>
+      <button onClick={handleClick}>Click</button>
+    </div>
+  );
+}
+export default App
+```
+Rappel : Pour modifier la valeur d'un `state`, tu dois toujours utiliser le setter de ce `state`.
 
 
 
