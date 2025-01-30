@@ -358,6 +358,159 @@ Les `props` peuvent être de n'importe quel `type`.
 Les `props` sont toujours en lecture seul.
 
 
+## Une histoire de contrats
+
+Tu as peut-être déjà entendu parler d'interfaces en programmation, sans rentrer dans les détails de la `programmation orienté objet`, une interface en programmation est un contrat (un ensemble de conditions) que doivent remplir deux parties afin de pouvoir interagir ensemble.
+
+Comme dans le monde réel lorsque tu loues quelque chose : tu signes (et respectes !) un contrat qui te permet d'accéder à un bien ou à un service.
+
+Qu'est-ce que ces histoires de contrat ont à voir avec `React` alors !? `TypeScript` fournit un système d'interfaces !
+
+Pour le moment, lorsque tu passes tes `props` d'un composant à un autre, tu peux passer n'importe quel type de données :
+```bash
+function SayHello({name, age}) {
+  return <p>Hello, my name is {name}, and i'm {age}.</p>;
+}
+function App() {
+  return <SayHello name="Wilder" age={22} />;
+} 
+export default App;
+```
+En tant qu'être humain, tu peux te tromper sur les types ou bien omettre de passer des `props` qui sont nécessaires au bon fonctionnement de ton composant :
+```bash
+function SayHello({name, age}) {
+  return <p>Hello, my name is {name}, and i'm {age}.</p>;
+}
+function App() {
+  return <SayHello name={22} age="Wilder" />;
+} 
+export default App;
+```
+
+### Comment ça marche ?
+
+Prenons un premier exemple (tiré de la doc officielle de `TypeScript`) :
+```bash
+function printCoord(pt) {
+  console.log("The coordinate's x value is " + pt.x);
+  console.log("The coordinate's y value is " + pt.y);
+}
+printCoord({ x: 100, y: 100 });
+printCoord({ X: 100, Y: 100 }); // can you see the problem ?
+```
+J'ai volontairement fait une faute de frappe sur la dernière ligne : `X` et `Y` sont en majuscules. Ce sont des choses qui arrivent, mais rien en JavaScript ne permet de détecter ce genre d'erreur : la syntaxe du code est valide.
+
+Avec `TypeScript`, tu peux déclarer explicitement le type d'une `variable` ou d'un `paramètre` de fonction. Par exemple, tu peux préciser qu'un paramètre est un nombre en ajoutant : number derrière le nom du paramètre :
+```bash
+function foo(x: number) {
+  console.log(x);
+}
+foo(42); // ok
+foo("42"); // no !!!
+```
+Pour tes déclarations, tu peux également utiliser les types `string`, `boolean`... et des `types complexes` comme les `tableaux` et `objets`. Pour un `objet`, tu peux déclarer une interface avec toutes ses `propriétés`. Par exemple, pour un point avec des coordonnées `x` et `y` :
+```bash
+interface Point {
+  x: number;
+  y: number;
+}
+```
+Tu peux ensuite utiliser ton interface `Point` pour typer une `variable` ou un paramètre en précisant : `Point.` C'est la même syntaxe que pour les `types primitifs` `number` ou `string` :
+```bash
+function printCoord(pt: Point) {
+  console.log("The coordinate's x value is " + pt.x);
+  console.log("The coordinate's y value is " + pt.y);
+}
+```
+Le code complet :
+```bash
+interface Point {
+  x: number;
+  y: number;
+}
+function printCoord(pt: Point) {
+  console.log("The coordinate's x value is " + pt.x);
+  console.log("The coordinate's y value is " + pt.y);
+} 
+printCoord({ x: 100, y: 100 });
+printCoord({ X: 100, Y: 100 }); // error !!!
+```
+
+Tu peux utiliser le même genre de contrat pour typer les `props` d'un composant `React` :
+```bash
+interface SayHelloProps {
+  name: string;
+  age: number;
+}
+function SayHello({name, age}: SayHelloProps) {
+  return <p>Hello, my name is {name}, and i'm {age}.</p>;
+}
+function App() {
+  return <SayHello name="Wilder" age={22} />;
+} 
+export default App;
+```
+Cette fois, `TypeScript` vérifie la cohérence de ton code et te prévient en cas d'erreur.
+
+
+
+Comme tu as vu dans l'exemple précédent, nous avons forcé le passage des `props`, qui sont donc désormais obligatoires. Mais comment faire si des propriétées sont optionnelles ?
+
+Dans `TypeScript`, tu peux ajouter le signe `?` sur ces propriétés pour préciser qu'elle sont optionnelles :
+```bash
+interface SayHelloProps {
+  name: string;
+  age?: number;
+
+function SayHello({ name, age }: SayHelloProps) {
+  return (
+    <p>
+      Hello, my name is {name}
+      {age != null && `, and I'm ${age}.`}
+    </p>
+  );
+}
+function App() {
+  return (
+    <>
+      <SayHello name="Wilder" age={22} />
+      <SayHello name="Toto" /> {/* Pas d'âge fourni ici */}
+    </>
+  );
+}
+export default App;
+```
+
+### Récapitulatif
+
+Tu as vu comment typer les props avec `TypeScript` avec une interface. Tu peux utiliser des types primitifs pour tes `props` comme `number`, `string` `boolean`... Mais également des `tableaux`, des `objets` et bien plus encore :
+```bash
+interface SayHelloProps {
+  name: string;
+  address: {
+    city: string;
+  };
+}
+
+function SayHello({ name, address }: SayHelloProps) {
+  return (
+    <p>
+      Hello, my name is {name}, and I live in {address.city}.
+    </p>
+  );
+}
+function App() {
+  return <SayHello name="Wildo" address={{ city: "Reims" }} />;
+} 
+export default App;
+```
+
+
+
+
+
+
+
 
 
 
