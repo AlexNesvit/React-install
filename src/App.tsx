@@ -1,7 +1,14 @@
 import React, { useState } from "react";
-import PokemonCard from './components/PokemonCard/PokemonCard.tsx'
+import PokemonCard from "./components/PokemonCard/PokemonCard";
 
-const pokemonList = [
+// Interface pour sécuriser le typage des pokémons
+interface Pokemon {
+  name: string;
+  imgSrc?: string;
+}
+
+// Liste des pokémons
+const pokemonList: Pokemon[] = [
   {
     name: "bulbasaur",
     imgSrc:
@@ -28,31 +35,27 @@ const pokemonList = [
 ];
 
 const App: React.FC = () => {
-  const [pokemonIndex, setPokemonIndex] = useState(0);
-
-  const handlePrevious = () => {
-    setPokemonIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-  };
-
-  const handleNext = () => {
-    setPokemonIndex((prevIndex) => Math.min(prevIndex + 1, pokemonList.length - 1));
-  };
+  const [pokemonIndex, setPokemonIndex] = useState<number>(0);
 
   return (
     <div className="flex flex-col items-center gap-4 mt-10">
+      {/* Navigation avec les boutons dynamiques */}
+      <nav className="flex gap-2">
+        {pokemonList.map((pokemon, index) => (
+          <button
+            key={pokemon.name} // Utilisation du name comme key (unique)
+            onClick={() => setPokemonIndex(index)}
+            className={`px-4 py-2 rounded ${
+              pokemonIndex === index ? "bg-blue-600 text-white" : "bg-gray-300"
+            }`}
+          >
+            {pokemon.name}
+          </button>
+        ))}
+      </nav>
+
+      {/* Affichage de la carte du Pokémon sélectionné */}
       <PokemonCard pokemon={pokemonList[pokemonIndex]} />
-      <div className="flex gap-4">
-        {pokemonIndex > 0 && (
-          <button onClick={handlePrevious} className="px-4 py-2 bg-blue-500 text-white rounded">
-            Précédent
-          </button>
-        )}
-        {pokemonIndex < pokemonList.length - 1 && (
-          <button onClick={handleNext} className="px-4 py-2 bg-green-500 text-white rounded">
-            Suivant
-          </button>
-        )}
-      </div>
     </div>
   );
 };
