@@ -526,6 +526,104 @@ function App() {
 export default App;
 ```
 
+Tu peux voir que `useState` te renvoie un `tableau` avec deux éléments : le premier est une `valeur`, et le second est une `fonction dispatchSetState`.
+
+Le premier élément de ce `tableau` est en fait la `valeur dynamique` que nous voulons manipuler dans notre `composant` : cela pourrait être un état coché/décoché par exemple. La `chaine de caractères` "`hello`" en pramètre du `useState` est la `valeur initiale` : vois ça comme la valeur par défaut d'une case à cocher.
+
+Le second élément est une `fonction` qui va te permettre de mettre à jour la première `valeur` qui représente le `state`.
+
+Pour modifier la valeur d'un state tu dois toujours utiliser la fonction prévue à cet effet.
+
+Tu peux récupérer ces 2 éléments du tableau retourné par `useState` dans des variables pour plus de lisibilité :
+```bash
+  const state = useState("hello");
+  const message = state[0];
+  const setMessage = state[1];
+  ```
+Pour aller plus vite, l'usage dans React est d'utiliser cette écriture avec une destructuration du tableau :
+`  const [message, setMessage] = useState("hello");`
+
+Par convention, tu dois nommer le "setter" d'un `state` par le nom de la variable précédé du mot set : si le state est stocké dans une variable `foo`, alors tu dois nommer le setter `setFoo`.
+
+Un autre exemple avec un état "compteur" (`count`) (valeur initiale : `0`) :
+```bash
+import { useState } from "react";
+function App() {
+  const [count, setCount] = useState(0);
+  console.log(count);
+  return <p>Hello world !</p>;
+}
+export default App;
+```
+
+### Comment utiliser le `state` ?
+
+Avant de commencer, nous allons introduire une notion que nous verrons plus en détail dans la suite du parcours : les event listeners.
+
+En `React` pour placer un event listener sur un bouton par exemple, tu peux procéder comme suit :
+```bash
+function App() {
+  const handleClick = () => {
+    console.log("you clicked");
+  };
+  return <button type="button" onClick={handleClick}>Click</button>;
+}
+export default App;
+```
+Comme tu peux le voir, nous avons placé un attribut `onClick` sur le button rendu par notre `JSX`, auquel nous avons assigné une `fonction de callback` qui prend en paramètre l'événement déclenché au click.
+
+Tu as défini la fonction `handleClick` et tu l'as ensuite transmise à `<button>` en tant que paramètre. `handleClick` est un gestionnaire d'évènements. Les fonctions de gestion d'évènements :
+
+Doivent être définies à l'intérieur des composants si elles utilisent un ou plusieurs setters de `state`.
+Par convention, elles ont un nom qui commence par `handle`, suivi du nom de l'événement.
+
+Tu verras ainsi souvent `onClick={handleClick}`, `onMouseEnter={handleMouseEnter}`, etc.
+
+Si tu transposes ça à du `JavaScript vanilla`, cela revient exactement au même de faire :
+```bash
+const btn = document.createElement("button");
+btn.textContent = "Click";
+const handleClick = () => {
+  console.log("you clicked");
+};
+btn.addEventListener("click", handleClick);
+document.body.appendChild(btn);
+```
+Les fonctions transmises aux gestionnaires d'événements doivent être transmises et non appelées. Par exemple :
+
+le passage d'une fonction est correct :` <button onClick={handleClick}>`
+l'appel d'une fonction est incorrect : `<button onClick={handleClick()}>`
+
+La différence est subtile. Dans le premier exemple, la fonction `handleClick` est transmise en tant que gestionnaire d'évènement. Cela indique à `React` de s'en souvenir et de n'appeler notre fonction que lorsque l'utilisateur clique sur le bouton (`onClick`).
+
+Dans le deuxième exemple, le () à la fin de `handleClick()` lance la fonction immédiatement pendant le rendu, sans aucun `clic`. Cela s'explique par le fait que le `JavaScript` contenu dans les `JSX {` et `}` s'exécute immédiatement.
+
+Revenons-en maintenant au state.
+
+Si nous souhaitons modifier le state d'un composant, nous pouvons le faire, par exemple, suite à une action de l'utilisateur :
+```bash
+import { useState } from "react";
+function App() {
+  const [count, setCount] = useState(0);
+  const handleClick = () => {
+    setCount(count + 1)
+  };
+  return (
+    <div>
+      <p>{count}</p>
+      <button type="button" onClick={handleClick}>Click</button>
+    </div>
+  );
+}
+export default App;
+```
+Dans cet exemple, lorsque tu cliques sur le bouton, le compteur est incrémenté de 1. Et... L'affichage se met automatiquement à jour !
+
+C'est là tout l'intérêt du `state` : lorsque tu modifies un `state` avec son setter, alors ton `composant` est rendu à nouveau : tout le code qui se trouve à l'intérieur est re-exécuté et l'affichage est mis à jour avec le nouveau `JSX` retourné.
+
+
+
+
 
 
 
