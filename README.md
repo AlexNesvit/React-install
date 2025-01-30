@@ -506,9 +506,25 @@ export default App;
 ```
 
 
+## 👩‍🏫 React Basics 06 - Utiliser un state
 
 
+### Le state
 
+Nous avons vu au travers des quêtes précédentes comment récupérer des valeurs venant de l'extérieur d'un `composant` grâce aux `props`. Nous allons maintenant voir comment gérer des valeurs dynamiques à l'intérieur d'un `composant` grâce au `state`.
+
+Dans `React`, un "`state`" est géré avec des fonctions de type "`hook`" : ce sont des fonctions dont le nom commence par `use`. Dans le cas d'un `state`, tu vas "prévenir" `React` que tu veux utiliser un `état` à l'intérieur de ton `composant` avec le `hook useState` (littéralement, "utiliser un état"). Comment ça se présente ?
+
+Regardons déjà ce que nous retourne ce fameux `hook useState` :
+```bash
+import { useState } from "react";
+function App() {
+  const state = useState("hello");
+  console.log(state)
+  return <p>Hello world !</p>;
+}
+export default App;
+```
 
 
 
