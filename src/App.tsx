@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import PokemonCard from "./components/PokemonCard/PokemonCard";
 import NavBar from "./components/NavBar/NavBar";
 
 // Liste des pokémons avec typage
@@ -18,12 +19,14 @@ const pokemonList: Pokemon[] = [
 const App: React.FC = () => {
   const [pokemonIndex, setPokemonIndex] = useState<number>(0);
 
+  // Affiche une alerte au démarrage de l'application
+  useEffect(() => {
+    alert("hello pokemon trainer :)");
+  }, []);
+
   return (
     <div className="flex flex-col items-center gap-4 mt-10">
-      {/*  Utilisation du composant NavBar */}
       <NavBar setPokemonIndex={setPokemonIndex} pokemonList={pokemonList} />
-      
-      {/*  Affichage du Pokémon sélectionné */}
       <PokemonCard pokemon={pokemonList[pokemonIndex]} />
     </div>
   );

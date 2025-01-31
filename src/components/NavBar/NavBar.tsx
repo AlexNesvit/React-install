@@ -19,7 +19,12 @@ const NavBar: React.FC<NavBarProps> = ({ setPokemonIndex, pokemonList }) => {
         <button
           key={pokemon.name}
           type="button"
-          onClick={() => setPokemonIndex(index)}
+          onClick={() => {
+            setPokemonIndex(index);
+            if (pokemon.name === "pikachu") {
+              alert("pika pikachu !!!"); //  Déclenche une alerte quand Pikachu est sélectionné
+            }
+          }}
           className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
         >
           {pokemon.name}
