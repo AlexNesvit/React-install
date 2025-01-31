@@ -1087,7 +1087,76 @@ Nous passons message en `props` au composant `DisplayMessage` pour lui permettre
 Tu peux tester par toi-même : si tu modifies le contenu de l'input, alors ces modifications s'afficheront également dans le paragraphe juste en dessous !
 
 
+## React Basics 10 - Aller plus loin avec les événements
 
+### Rappel du DOM
+
+Les événements `HTML` sont des "choses" qui arrivent aux éléments `HTML`. Ils sont générés automatiquement par le navigateur pour toutes nos actions (taper du texte, bouger la souris, survoler un élément, en sortir, cliquer sur un bouton...).
+
+Lorsque tu codes des pages `HTML`, `JavaScript` permet de "réagir" à ces événements en les écoutant de manière spécifique. Rappelle-toi... Le fameux :
+```bash
+const doSomething = () => {
+  // do something
+};
+element.addEventListener('click', doSomething)`
+```
+
+### Et dans React ?
+
+Dans `React`, tu dois oublier la méthode `addEventListener` et utiliser les attributs comme `onClick` directement dans les balises :
+`<button onClick={doSomething}>Click Me</button>`
+
+Dans `React`, note que la syntaxe des attributs est en `camelCase` :
+
+`onclick => onClick`
+`onchange => onChange`
+`onmouseleave => onMouseLeave`
+
+
+Un exemple complet :
+```bash
+function Button () {
+  const handleClick = () => {
+    alert("Yes, you clicked me!");
+  };
+  return (
+    <button onClick={handleClick}>
+      Click Me
+    </button>
+  );
+}
+export default Button;
+```
+
+### Des événements spécifiques à React
+
+Pour cela, tu peux utiliser un autre `hook de React` : `useEffect`. Nous allons le découvrir rapidement aujourd'hui et reviendrons plus en profondeur dessus un peu plus tard pour mieux le comprendre...
+
+Pour le moment, retiens sa syntaxe : `useEffect`(fonction fléchée, tableau vide)
+
+Soit :
+```bash
+useEffect(
+   () =>  {
+     // ton code à exécuter
+   }, 
+   []
+);
+```
+Par exemple :
+```bash
+import { useEffect } from "react";
+function App() {
+  useEffect(
+    () => {
+      console.log("Welcome in this amazing world, this is an automatic message !!!");
+    },
+    []
+  );
+  return <p>Hello !</p>;
+};
+export default App;
+```
 
 
 
