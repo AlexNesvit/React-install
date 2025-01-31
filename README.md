@@ -900,6 +900,15 @@ Dans cet exemple, nous avons filtré le tableau du state afin de ne récupérer 
 De nombreuses `méthodes` de tableau existent : tu peux en essayer d'autres en `fonction` de tes besoins.
 
 
+## React Basics 08 - Le CSS dans React
+
+### Introduction
+
+Le style de notre application a un impact très important sur l'apparence des `composants`, l’interaction utilisateur et son ressenti. Nous allons aborder des premières méthodes simples pour styliser une application `React`.
+
+Il y a de multiples façons de styliser une application `React`, et nous allons en examiner seulement quelques-unes. Garde en tête qu'il n'y a pas de bonne ou de mauvaise façon de styliser : utilise la façon qui s'adapte le mieux à ton projet !
+
+
 
 
 
