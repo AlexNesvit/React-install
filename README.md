@@ -900,6 +900,142 @@ Dans cet exemple, nous avons filtré le tableau du state afin de ne récupérer 
 De nombreuses `méthodes` de tableau existent : tu peux en essayer d'autres en `fonction` de tes besoins.
 
 
+## React Basics 08 - Le CSS dans React
+
+### Introduction
+
+Le style de notre application a un impact très important sur l'apparence des `composants`, l’interaction utilisateur et son ressenti. Nous allons aborder des premières méthodes simples pour styliser une application `React`.
+
+Il y a de multiples façons de styliser une application `React`, et nous allons en examiner seulement quelques-unes. Garde en tête qu'il n'y a pas de bonne ou de mauvaise façon de styliser : utilise la façon qui s'adapte le mieux à ton projet !
+
+
+### Sommaire
+
+Appliquer du `CSS` avec des classes
+Utiliser l'attribut "`style`"
+Utiliser des modules `CSS`
+What `else` ?
+
+Appliquer du `CSS` avec des classes
+
+Dans `React`, tu peux spécifier une classe `CSS` sur un élément `JSX` avec la prop `className`. Cela fonctionne exactement comme l'attribut class en `HTML`.
+
+Pourquoi ne pas utiliser class comme en `HTML` ? Parce que le mot class est déjà un mot-clé en `JavaScript`. Les personnes qui ont conçu `React` ont donc choisi d'utiliser `className` pour éviter de générer des erreurs.
+
+Par exemple :
+`<img className="avatar" />`
+
+Tu peux ensuite écrire le code `CSS` correspondant dans un fichier `CSS` séparé, comme tu en as l'habitude :
+```bash
+.avatar {
+  border-radius: 50%;
+}
+```
+React n'impose pas la façon d'intégrer tes fichiers `CSS` dans ton application. Dans le cas le plus simple, tu peux ajouter une balise `<link>` à ton code `HTML`.
+
+Une autre option : la plupart des frameworks basés sur `React` te permettent d'importer des fichiers `CSS` directement dans un `composant`. Quelque chose comme ça :
+```bash
+import "./App.css";
+function App() {
+  return <p className="my-class">Hello world</p>
+}
+```
+👍 Avantages : facile à mettre en œuvre, car tu connais déjà le `CSS`. S'adapte également bien avec des framework `CSS` comme `Tailwind CSS` (tu peux voir le guide d'installation avec Vite, ou choisis un autre framework `CSS` sur `State` of `CSS` survey).
+
+👎 Inconvénients : difficile à maintenir, plus difficile à faire évoluer. Impossible de calculer des styles dynamiques.
+
+🔬 Expérimente :
+
+Tu peux faire des essais dans le "bac à sable" ci-dessous en modifiant `App.css` :
+```bash
+import PokemonCard from "./PokemonCard";
+import "./App.css";
+function App() {
+  return <PokemonCard />;
+}
+export default App;
+```
+Voici ma version si tu veux voir un résultat fini :
+```bash
+import PokemonCard from "./PokemonCard";
+import "./App.css";
+function App() {
+  return <PokemonCard />;
+}
+```
+
+### Utiliser l'attribut "style"
+
+Tout comme en `HTML`, tu peux utiliser l'attribut `style` dans ton application `React` pour appliquer du `CSS`. Mais avec quelques légères différences : au lieu d'écrire le `CSS "inline"`, tu dois le passer sous la forme d'un objet. Dans cet objet, les noms des propriétés doivent être en `camelCase`, et les valeurs doivent être des chaines de caractères :
+```bash
+function App() {
+  const container = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  };
+  return (
+    <section style={container}>
+      <h1 style={{color: "#0d1a26", fontWeight: "400"}}>Hey! We're using inline style!</h1>
+    </section>
+  );
+}
+```
+Dans l'exemple ci-dessus, `style={{}}sur` le `h1` n'est pas une syntaxe spéciale, mais un `objet {}` littéral à l'intérieur des accolades de l'attribut `style={}`. `React` recommande d'utiliser l'attribut `style` uniquement lorsque les styles dépendent de variables `JavaScript` :
+```bash
+<img
+  className="avatar"
+  style={{
+    width: user.imageSize,
+    height: user.imageSize,
+  }}
+/>
+```
+
+👍 Avantages : comme nous avons affaire à un objet, nous pouvons l'étendre et ajouter d'autres propriétés, changer les valeurs de manière conditionnelle.
+
+👎 Inconvénients : impossible d'utiliser les media queries et les pseudo-classe.
+
+
+### Utiliser des modules CSS
+
+Les `Modules CSS` peuvent t'aider à déclarer tes classes `CSS` avec une portée locale pour un `composant`. Concrètement, cela signifie que les noms de classes vont être générés par un algorithme pour obtenir des noms uniques pour chaque `composant`. Cela permet d'éviter les conflits de noms de classes que tu pourrais répéter dans ton application (avoir plusieurs classes `.button` qui se contredisent par exemple).
+
+Un module est un fichier `CSS` normal. Par exemple, un fichier `MyComponent.module.css` :
+```bash
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center
+    justify-content: center;
+}
+.title {
+    color: #0d1a26;
+    font-weight: 700;
+}
+```
+
+Ensuite, tu peux l'importer dans ton composant. Le composant utilisera les styles importés avec l'attribut `className` :
+```bash
+import styles from './MyComponent.module.css';
+function MyComponent() {
+  return (
+    <section className={styles.container}>
+      <h1 className={styles.title}>Hey! We're using CSS modules!</h1>
+    </section>
+  );
+};
+```
+
+👍 Avantages : pas de conflit dans les noms de classe.
+
+👎 Inconvénients : difficile de partager le même style entre les composants.
+
+
+
+
+
 
 
 
