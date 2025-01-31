@@ -1033,6 +1033,59 @@ function MyComponent() {
 👎 Inconvénients : difficile de partager le même style entre les composants.
 
 
+## React Basics 09 - Pokédex - Partager un state
+
+### Un problème de communication
+
+Ici, nous avons un composant `InputMessage` et un composant `DisplayMessage` affichés dans `App`. Le composant `InputMessage` affiche un input de type text contrôlé par son state message.
+
+Tu peux le coder de cette façon :
+```bash
+import InputMessage from "./InputMessage";
+import DisplayMessage from "./DisplayMessage";
+function App() {
+  return (
+    <>
+      <InputMessage />
+      <DisplayMessage />
+    </>
+  );
+}
+export default App;
+```
+Maintenant, je souhaite afficher le message dans le composant `DisplayMessage` : comment faire ?
+
+### Encore et toujours la hiérarchie !
+
+Afin de faire communiquer entre eux deux composants, tu dois faire remonter le state au premier ancêtre commun !
+
+Explications :
+
+Si tu reprends notre schéma, le state message est déclaré dans le composant `InputMessage`. Tu ne peux pas y accéder dans le composant `DisplayMessage`. Pour régler le problème, tu peux faire remonter le `state` message dans le composant `App`, puis faire redescendre le state dans `InputMessage` et dans `DisplayMessage` grâce aux `props`.
+
+Tu connais déjà le `state`. Tu connais également les `props`. Combine les deux afin de régler notre problème :
+```bash
+import { useState } from "react";
+import InputMessage from "./InputMessage";
+import DisplayMessage from "./DisplayMessage";
+function App() {
+  const [message, setMessage] = useState("");
+  return (
+    <>
+      <InputMessage setMessage={setMessage} />
+      <DisplayMessage message={message} />
+    </>
+  );
+}
+export default App;
+```
+Le `state` est déclaré dans `App` et partagé avec `InputMessage` et `DisplayMessage` avec des `props` :
+
+Nous passons `setMessage` en props au composant `InputMessage` pour lui permettre de modifier le state.
+Nous passons message en `props` au composant `DisplayMessage` pour lui permettre d'afficher la valeur du `state`.
+
+Tu peux tester par toi-même : si tu modifies le contenu de l'input, alors ces modifications s'afficheront également dans le paragraphe juste en dessous !
+
 
 
 
